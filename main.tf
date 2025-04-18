@@ -7,6 +7,16 @@ terraform {
   }
 }
 
+terraform { 
+  cloud { 
+    
+    organization = "yy-org" 
+
+    workspaces { 
+      name = "hcptf-platform-mgmt" 
+    } 
+  } 
+}
 provider "tfe" {
    # Configuration options
 }
@@ -52,5 +62,26 @@ module "random_pets_projecter" {
   team_access = {
     tf-team = "admin"
     random-pets-app-team = "write"
+  }
+}
+
+module "random_pets_workspacer" {
+  source  = "alexbasista/workspacer/tfe"
+  organization   = var.organization
+  workspace_name = "random-pets-mg-ws"
+  workspace_desc = "Description of my new Workspace."
+  workspace_tags = ["mgmt"]
+  project_name   = "random-pets-application"
+
+  vcs_repo = {
+    identifier     = "xinuy77/tf-bc"
+    branch         = "develop"
+    oauth_token_id = "ot-boB2UZtPjbwt82mH"
+  }
+
+  tfvars = {
+    pet_length = 10
+    pet_prefix  = "fluffy"
+    pet_separator = "-"
   }
 }
